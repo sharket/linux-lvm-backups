@@ -75,7 +75,7 @@ BACKUP_SECRET=$(cat /usr/local/etc/backup_secret.txt | openssl enc -aes-256-cbc 
 Additionally, instead of using root account, you can create a dedicated one for running the script with explicit ownership and permissions for the password file. This would also require setting up appropriate permissions for that account to manage LVM snapshots and write access to the output folder.
 
 ### How to restore?
-You can list available Logical Volumes with sudo lvdisplay command. Let's assume your target partition is /dev/vg_test/temp. Volume Group in this case is named vg_test, Logical Volume is temp. To restore the image:
+You can list available Logical Volumes with 'sudo lvdisplay' command. Let's assume your target partition is /dev/vg_test/temp. Volume Group in this case is named 'vg_test', Logical Volume is 'temp'. To restore the image:
 
 0. Become root / su first. On Ubuntu:
 ```
