@@ -52,7 +52,7 @@ OUTPUT_FOLDER="/mnt/data/backups/"
 ```
 5. Create backup secret (password used for encryption) and store it in a file. IMPORTANT: You will need that password to restore the backup!
 ```
-echo 'YOUR_BACKUP_SECRET' > /usr/local/etc/backup_secret.txt
+echo -n 'YOUR_BACKUP_SECRET' > /usr/local/etc/backup_secret.txt
 ```
 6. Make sure permissions are restricted to root only:
 ```
