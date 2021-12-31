@@ -1,9 +1,9 @@
 ## Linux LVM backup script
 
 ### Main goals of this script:
-* Provides better alternative than using disk cloning tools (ie. Clonezilla) as a backup strategy
+* Provides better alternative than using disk cloning tools (ie. Clonezilla) as a bitwise backup strategy
 * Creates full image of a disk partition using LVM snapshot and dd
-* Doesn't interfere nor interrupt normal operation of the system and can be run in the background, thanks to the nature of LVM
+* Doesn't interfere with nor interrupt normal operation of the system and can be run in the background, thanks to the nature of LVM
 * Backups are compressed with pigz, utilizing multiple CPU cores
 * Backups are fully encrypted
 * Can be scheduled to run unattended using cron etc.
@@ -85,7 +85,7 @@ sudo -i
 ```
 cat 'PATH_TO_YOUR_IMAGE' | openssl enc -aes-256-cbc -md sha512 -d -pbkdf2 -iter 1000 -salt -pass pass:'YOUR_BACKUP_SECRET' | gzip -dk | dd of=/dev/vg_test/temp bs=50M
 ```
-This will wipe all the existing data on that partition! Restoring takes significantly longer time than backing up. Target partition must be the same size or bigger than the source one.
+This will wipe all the existing data on that partition! Target partition must be the same size or bigger than the source one.
 
 ### More info and sources:
 
