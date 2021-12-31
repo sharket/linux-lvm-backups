@@ -12,22 +12,25 @@
 
 ### Requirements:
 * Disk partitions must be provisioned using LVM
-* Volume group (VG) must have enough unallocated free space for the snapshot. If the logical volume (LV) being backed up is 60GB in size, then 60GB of free space is needed. This might be an overkill (TODO: add a switch / variable to adjust that), but it ensures that changes made to the file system during backup process can't outgrow snapshot size and therefore render it (and the backup image) unusable.
+* Volume group (VG) must have enough unallocated free space for the snapshot. Script will attempt to use around 5% of the partition size. If the logical volume (LV) being backed up is 60GB in size, then 3GB of free space is needed for the snapshot. As best practice, the backups should be taken during periods of low activity on the system in order to ensure that changes made to the file system during backup process can't outgrow snapshot size and therefore render it (and the backup image) unusable.
 * Required software: pigz, openssl, pv
 
 ### Setup:
-
+0. Become root / su. On Ubuntu:
+```
+sudo -i
+```
 1. Ensure required software is installed. On Ubuntu:
 ```
-sudo apt install pigz openssl pv
+apt install pigz openssl pv
 ```
 2. Download the script to /usr/local/bin on your system:
 ```
-sudo curl https://raw.githubusercontent.com/sharket/linux-lvm-backups/main/auto_backup.sh -o /usr/local/bin/auto_backup.sh
+curl https://raw.githubusercontent.com/sharket/linux-lvm-backups/main/auto_backup.sh -o /usr/local/bin/auto_backup.sh
 ```
 2. Make it executable:
 ```
-sudo chmod +x /usr/local/bin/auto_backup.sh
+chmod +x /usr/local/bin/auto_backup.sh
 ```
 3. Edit the script and define variables:
 ```
@@ -49,12 +52,12 @@ OUTPUT_FOLDER="/mnt/data/backups/"
 ```
 4. Create backup secret (password used for encryption) and store it in a file. IMPORTANT: You will need that password to restore the backup!
 ```
-sudo echo 'YOUR_BACKUP_SECRET' > /usr/local/etc/backup_secret.txt
+echo 'YOUR_BACKUP_SECRET' > /usr/local/etc/backup_secret.txt
 ```
-6. Restrict permissions to root only:
+6. Make sure permissions are restricted to root only:
 ```
-sudo chown root:root /usr/local/etc/backup_secret.txt
-sudo chmod 600 /usr/local/etc/backup_secret.txt
+chown root:root /usr/local/etc/backup_secret.txt
+chmod 600 /usr/local/etc/backup_secret.txt
 ```
 7. Script can be run at this point or scheduled using cron.
 
@@ -74,17 +77,15 @@ Additionally, instead of using root account, you can create a dedicated one for 
 ### How to restore?
 You can list available Logical Volumes with sudo lvdisplay command. Let's assume your target partition is /dev/vg_test/temp. Volume Group in this case is named vg_test, Logical Volume is temp. To restore the image:
 
-1. Become root / su first. On Ubuntu:
+0. Become root / su first. On Ubuntu:
 ```
 sudo -i
 ```
 2. Run this to restore:
 ```
-cat 'PATH_TO_YOUR_IMAGE' | openssl enc -aes-256-cbc -md sha512 -d -pbkdf2 -iter 1000 -salt -pass pass:'YOUR_BACKUP_SECRET' | gzip -dk | dd of=/dev/vg_test/temp
+cat 'PATH_TO_YOUR_IMAGE' | openssl enc -aes-256-cbc -md sha512 -d -pbkdf2 -iter 1000 -salt -pass pass:'YOUR_BACKUP_SECRET' | gzip -dk | dd of=/dev/vg_test/temp bs=50M
 ```
-This will wipe all the existing data on that partition! Restoring takes significantly longer time than backing up.
-
-Needles to say, if restoring to a system partition on a live system you need to use separate environment, for example by booting Linux live CD.
+This will wipe all the existing data on that partition! Restoring takes significantly longer time than backing up. Target partition must be the same size or bigger than the source one.
 
 ### More info and sources:
 
