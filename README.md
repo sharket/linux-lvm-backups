@@ -5,7 +5,7 @@
 * Creates full image of a disk partition using LVM snapshot and dd
 * Doesn't interfere with nor interrupt normal operation of the system and can be run in the background, thanks to the nature of LVM
 * Backups are compressed with pigz, utilizing multiple CPU cores
-* Backups are fully encrypted
+* Backups are encrypted
 * Can be scheduled to run unattended using cron etc.
 
 ![script_running](misc/backup.png)
@@ -72,7 +72,7 @@ echo 'YOUR_BACKUP_SECRET' | openssl enc -aes-256-cbc -md sha512 -a -pbkdf2 -iter
 ```
 BACKUP_SECRET=$(cat /usr/local/etc/backup_secret.txt | openssl enc -aes-256-cbc -md sha512 -a -d -pbkdf2 -iter 100000 -salt -pass pass:'YOUR_PASSWORD')
 ```
-Additionally, instead of using root account, you can create a dedicated one for running the script with explicit ownership and permissions for the password file. This would also require setting up appropriate permissions for that account to manage LVM snapshots and write access to the output folder.
+Additionally, instead of using root account, you can create a dedicated one for running the script with explicit ownership and permissions for the password file. This would also require setting up appropriate permissions for that account to manage LVM snapshots, imaging with dd, and write access to the output folder.
 
 ### How to restore?
 You can list available Logical Volumes with `sudo lvdisplay` command. Let's assume your target partition is /dev/vg_test/temp. Volume Group in this case is named `vg_test`, Logical Volume is `temp`. To restore the image:
