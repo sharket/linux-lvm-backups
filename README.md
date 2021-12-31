@@ -13,7 +13,7 @@
 ### Requirements:
 * Disk partitions must be provisioned using LVM
 * Volume group (VG) must have enough unallocated free space for the snapshot. Script will attempt to use around 5% of the partition size. If the logical volume (LV) being backed up is 60GB in size, then 3GB of free space is needed for the snapshot. As best practice, the backups should be taken during periods of low activity on the system in order to ensure that changes made to the file system during backup process can't outgrow snapshot size and therefore render it (and the backup image) unusable.
-* Required software: pigz, openssl, pv
+* Required software: `pigz`, `openssl`, `pv`
 
 ### Setup:
 0. Become root / su. On Ubuntu:
@@ -75,7 +75,7 @@ BACKUP_SECRET=$(cat /usr/local/etc/backup_secret.txt | openssl enc -aes-256-cbc 
 Additionally, instead of using root account, you can create a dedicated one for running the script with explicit ownership and permissions for the password file. This would also require setting up appropriate permissions for that account to manage LVM snapshots and write access to the output folder.
 
 ### How to restore?
-You can list available Logical Volumes with 'sudo lvdisplay' command. Let's assume your target partition is /dev/vg_test/temp. Volume Group in this case is named 'vg_test', Logical Volume is 'temp'. To restore the image:
+You can list available Logical Volumes with `sudo lvdisplay` command. Let's assume your target partition is /dev/vg_test/temp. Volume Group in this case is named `vg_test`, Logical Volume is `temp`. To restore the image:
 
 0. Become root / su first. On Ubuntu:
 ```
