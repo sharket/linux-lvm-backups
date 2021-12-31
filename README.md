@@ -28,11 +28,11 @@ apt install pigz openssl pv
 ```
 curl https://raw.githubusercontent.com/sharket/linux-lvm-backups/main/auto_backup.sh -o /usr/local/bin/auto_backup.sh
 ```
-2. Make it executable:
+3. Make it executable:
 ```
 chmod +x /usr/local/bin/auto_backup.sh
 ```
-3. Edit the script and define variables:
+4. Edit the script and define variables:
 ```
 ### DEFINE THESE VARIABLES:
 
@@ -50,7 +50,7 @@ OUTPUT_FOLDER="/mnt/data/backups/"
 
 ### END OF USER VARIABLES
 ```
-4. Create backup secret (password used for encryption) and store it in a file. IMPORTANT: You will need that password to restore the backup!
+5. Create backup secret (password used for encryption) and store it in a file. IMPORTANT: You will need that password to restore the backup!
 ```
 echo 'YOUR_BACKUP_SECRET' > /usr/local/etc/backup_secret.txt
 ```
@@ -81,7 +81,7 @@ You can list available Logical Volumes with `sudo lvdisplay` command. Let's assu
 ```
 sudo -i
 ```
-2. Run this to restore:
+1. Run this to restore:
 ```
 cat 'PATH_TO_YOUR_IMAGE' | openssl enc -aes-256-cbc -md sha512 -d -pbkdf2 -iter 1000 -salt -pass pass:'YOUR_BACKUP_SECRET' | gzip -dk | dd of=/dev/vg_test/temp bs=50M
 ```
