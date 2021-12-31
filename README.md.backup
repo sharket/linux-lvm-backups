@@ -21,7 +21,7 @@ sudo apt install pigz openssl pv
 ```
 2. Download the script to /usr/local/bin on your system:
 ```
-sudo curl https://raw.githubusercontent.com/sharket/linux-lvm-backups/main/auto_backup.sh -o /usr/local/bin/auto_backup.sh
+curl https://raw.githubusercontent.com/sharket/linux-lvm-backups/main/auto_backup.sh -o /usr/local/bin/auto_backup.sh
 ```
 2. Make it executable:
 ```
