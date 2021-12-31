@@ -1,7 +1,7 @@
 ## Linux LVM backup script
 
 ### Main goals of this script:
-* Provides better alternative than using disk cloning tools (ie. Clonezilla) as a bitwise backup strategy
+* Provides better alternative than using disk cloning tools (e.g. Clonezilla) as a bitwise backup strategy
 * Creates full image of a disk partition using LVM snapshot and dd
 * Doesn't interfere with nor interrupt normal operation of the system and can be run in the background, thanks to the nature of LVM
 * Backups are compressed with pigz, utilizing multiple CPU cores
