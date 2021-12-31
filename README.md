@@ -12,7 +12,7 @@
 
 ### Requirements:
 * Disk partitions must be provisioned using LVM
-* Volume group (VG) must have enough unallocated free space for the snapshot. If the logical volume (LV) being backed up is 60GB in size, then 60GB of free space is needed.
+* Volume group (VG) must have enough unallocated free space for the snapshot. If the logical volume (LV) being backed up is 60GB in size, then 60GB of free space is needed. This might be an overkill (TODO: add a switch / variable to adjust that), but it ensures that changes made to the file system during backup process can't outgrow snapshot size and therefore render it (and the backup image) unusable.
 * Required software: pigz, openssl, pv
 
 ### Setup:
@@ -72,13 +72,19 @@ BACKUP_SECRET=$(cat /usr/local/etc/backup_secret.txt | openssl enc -aes-256-cbc 
 Additionally, instead of using root account, you can create a dedicated one for running the script with explicit ownership and permissions for the password file. This would also require setting up appropriate permissions for that account to manage LVM snapshots and write access to the output folder.
 
 ### How to restore?
+You can list available Logical Volumes with sudo lvdisplay command. Let's assume your target partition is /dev/vg_test/temp. Volume Group in this case is named vg_test, Logical Volume is temp. To restore the image:
 
-Let's assume your target partition is /dev/mapper/vgbox-lv1. To restore the image:
+1. Become root / su first. On Ubuntu:
+```
+sudo -i
+```
+2. Run this to restore:
+```
+cat 'PATH_TO_YOUR_IMAGE' | openssl enc -aes-256-cbc -md sha512 -d -pbkdf2 -iter 1000 -salt -pass pass:'YOUR_BACKUP_SECRET' | gzip -dk | dd of=/dev/vg_test/temp
+```
+This will wipe all the existing data on that partition! Restoring takes significantly longer time than backing up.
 
-```
-gzip -dk 'PATH_TO_YOUR_IMAGE' | openssl enc -aes-256-cbc -md sha512 -d -pbkdf2 -iter 1000 -salt -pass pass:'YOUR_BACKUP_SECRET' | dd of=/dev/mapper/vgbox-lv1
-```
-This will wipe all the existing data on that partition!
+Needles to say, if restoring to a system partition on a live system you need to use separate environment, for example by booting Linux live CD.
 
 ### More info and sources:
 
