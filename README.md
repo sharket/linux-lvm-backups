@@ -66,7 +66,7 @@ Storing passwords in clear text isn't a good practice, although for the purpose 
 
 1. Encrypt your BACKUP_SECRET with additional password:
 ```
-echo 'YOUR_BACKUP_SECRET' | openssl enc -aes-256-cbc -md sha512 -a -pbkdf2 -iter 100000 -salt -pass pass:'YOUR_PASSWORD' > /usr/local/etc/backup_secret.txt
+echo -n 'YOUR_BACKUP_SECRET' | openssl enc -aes-256-cbc -md sha512 -a -pbkdf2 -iter 100000 -salt -pass pass:'YOUR_PASSWORD' > /usr/local/etc/backup_secret.txt
 ```
 2. Then replace BACKUP_SECRET variable in the script with:
 ```
