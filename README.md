@@ -8,6 +8,8 @@
 * Backups are fully encrypted
 * Can be scheduled to run unattended using cron etc.
 
+![script_running](misc/backup.png)
+
 ### Requirements:
 * Disk partitions must be provisioned using LVM
 * Volume group (VG) must have enough unallocated free space for the snapshot. If the logical volume (LV) being backed up is 60GB in size, then 60GB of free space is needed.
